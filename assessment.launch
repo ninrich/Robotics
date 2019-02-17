@@ -1,0 +1,65 @@
+<launch>
+  <param name="/use_sim_time" value="true"/>
+  <rosparam param="robot_start">[-4.8,-3.6,0]</rosparam>
+  <rosparam param="goal0">[-2,-2]</rosparam> <!-- easy -->
+  <rosparam param="goal1">[2.5,-4.15]</rosparam> <!-- a bit harder -->
+  <rosparam param="goal2">[-2.55,3.13]</rosparam> <!-- same as above -->
+  <rosparam param="goal3">[4.5,-3.5]</rosparam>  <!-- much harder -->
+  <rosparam param="goal4">[5.15,2]</rosparam> <!-- very hard -->
+  <node name="map_server" pkg="map_server" type="map_server" args="/home/nino/Desktop/roboass/map.yaml" />
+  <node name="stage" pkg="stage_ros" type="stageros" args="/home/nino/Desktop/roboass/map.world" />
+  <node name="dummy_localization" pkg="code" type="dummy_localization.py"/>  
+  <node name="add_gaussian_noise" pkg="code" type="addGaussianNoise.py"/>
+  <node name="real_robot_pose" pkg="code" type="real_robot_pose.py" respawn="true" />
+  <node name= "robot" pkg= "code" type= "robot.py" respawn="true" launch-prefix= "xterm -e" />
+  <node name="point_node" pkg="nodelet"	type= "nodelet" args= "manager" />
+  <node name ="camera_linker" pkg	= "nodelet" type= "nodelet"	args= "load depth_image_proc/register point_node">
+  		<remap from = "rgb/camera_info" to= "/camera_info" />
+  		<remap from = "depth/image_rect" to= "/depth"	/>
+  		<remap from = "depth/camera_info" to= "/camera_info" />
+  </node>
+  <node name="camera_point_cloud" pkg="nodelet" type="nodelet" args="load depth_image_proc/point_cloud_xyzrgb point_node" >
+  		<remap from="rgb/camera_info" to="/camera_info"	/>  			   
+  		<remap from="rgb/image_rect_color" to="/image" />  		 	   
+  		<remap from 	= "depth_registered/points" to="rgb_points"	/>  
+  </node>
+  <node name="visualizer" pkg= "code" type= "models.py" />
+  
+ <node pkg="amcl" type="amcl" name="amcl" output="screen" respawn="true">
+		<remap from="scan" to="noisy_base_scan" />
+		<param name="odom_model_type" value="diff"/>
+		<param name="transform_tolerance" value="0" />
+		<param name="gui_publish_rate" value="20.0"/>
+		<param name="laser_max_beams" value="30"/>
+		<param name="min_particles" value="1000"/>
+		<param name="max_particles" value="5000"/>
+		<param name="kld_err" value="0.05"/>
+		<param name="kld_z" value="0.99"/>
+		<param name="laser_z_hit" value="0.9"/>
+		<param name="laser_z_short" value="0.05"/>
+		<param name="laser_z_max" value="0.05"/>
+		<param name="laser_z_rand" value="0.1"/>
+		<param name="laser_sigma_hit" value="0.2"/>
+		<param name="laser_lambda_short" value="0.1"/>
+		<param name="laser_lambda_short" value="0.1"/>
+		<param name="laser_model_type" value="likelihood_field"/>
+		<!-- <param name="laser_model_type" value="beam"/> -->
+		<param name="laser_likelihood_max_dist" value="6.0"/>
+		<param name="update_min_d" value="0.00001"/>
+		<param name="update_min_a" value="0.00001"/>
+		<param name="tf_broadcast" value="true"/>
+		<param name="odom_frame_id" value="odom"/>
+		<param name="global_frame_id" value="map"/>
+		<param name="resample_interval" value="1"/>
+		<param name="transform_tolerance" value="0.05"/>
+		
+		<!-- change this pose if you change start_pos parameter -->
+		<param name="initial_pose_x" value="-4.8" />
+		<param name="initial_pose_y" value="-3.6" />
+		<param name="initial_pose_a" value="0" />
+		<param name="initial_cov_xx" value="0.055" />
+		<param name="initial_cov_yy" value="0.055" />
+		<param name="initial_cov_yy" value="0.025" />
+</node>
+
+</launch>

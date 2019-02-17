@@ -1,0 +1,8 @@
+prefix=/home/nino/Desktop/roboass/install
+
+Name: code
+Description: Description of code
+Version: 0.0.0
+Cflags: 
+Libs: -L/home/nino/Desktop/roboass/install/lib 
+Requires: 

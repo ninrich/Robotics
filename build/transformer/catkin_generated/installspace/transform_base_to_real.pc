@@ -1,0 +1,8 @@
+prefix=/home/nino/Desktop/roboass/install
+
+Name: transform_base_to_real
+Description: Description of transform_base_to_real
+Version: 0.0.0
+Cflags: 
+Libs: -L/home/nino/Desktop/roboass/install/lib 
+Requires: 

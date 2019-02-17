@@ -1,0 +1,8 @@
+prefix=/home/nino/Desktop/roboass/devel
+
+Name: dummy_localization
+Description: Description of dummy_localization
+Version: 0.0.0
+Cflags: 
+Libs: -L/home/nino/Desktop/roboass/devel/lib 
+Requires: 

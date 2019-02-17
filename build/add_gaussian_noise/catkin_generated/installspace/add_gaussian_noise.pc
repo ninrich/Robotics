@@ -1,0 +1,8 @@
+prefix=/home/nino/Desktop/roboass/install
+
+Name: add_gaussian_noise
+Description: Description of add_gaussian_noise
+Version: 0.0.0
+Cflags: 
+Libs: -L/home/nino/Desktop/roboass/install/lib 
+Requires: 
